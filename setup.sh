@@ -1,5 +1,6 @@
 sudo apt update
 sudo apt-get -y install python3-pip
+sudo apt-get -y install ffmpeg libsm6 libxext6
 PATH="/users/$USER/.local/bin:$PATH"
 sudo git clone https://github.com/CMahk/yolov5.git
 cd ./yolov5
