@@ -3,6 +3,10 @@ import cv2
 import torch
 import os
 from PIL import Image
+import time
+
+import logging
+logging.basicConfig(level=logging.INFO, filename="server.log", filemode="w", format="%(levelname)s - %(message)s")
 
 path = os.path.abspath(os.path.dirname(__file__))
 port = 25565
@@ -35,16 +39,27 @@ while True:
     print('Done receiving')
     conn.close()
     
+    logging.info("Loading model")
+
     # Model
     pt = os.path.abspath(os.path.dirname(__file__))
     ptweight = pt + "/yolov5/fruit_weights/600"
     print("PATH: " + pt)
+    load_start = time.time()
     model = torch.hub.load("ultralytics/yolov5", "custom", path = ptweight, force_reload = False)
+    load_end = time.time()
+
+    logging.info("Model successfully loaded")
+    logging.info("Model loading time: " + str(load_end - load_start) + " sec")
 
     im = pt + "/received_file.jpg"
 
     # Inference
+    run_start = time.time()
     results = model(im)  # includes NMS
+    run_end = time.time()
+
+    logging.info("Model running time: " + str(run_end - run_start) + " sec")
 
     # Results
     results.print()  
