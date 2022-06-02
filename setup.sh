@@ -6,5 +6,6 @@ sudo git clone https://github.com/CMahk/yolov5.git
 cd ./yolov5
 pip3 install -r requirements.txt
 pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
+pip3 install psutil
 yes | sudo ufw enable
 sudo ufw allow 25565

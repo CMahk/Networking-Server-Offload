@@ -3,6 +3,7 @@ import cv2
 import torch
 import os
 from PIL import Image
+import psutil
 import time
 
 import logging
@@ -28,10 +29,14 @@ while True:
 
     with open(path + "/received_file.jpg", "wb") as f:
         print('Opening file...')
+        start_bw = psutil.net_io_counters().bytes_recv
         while True:
             print('Receiving data...')
             data = conn.recv(1024)
             if not data:
+                end_bw = psutil.net_io_counters().bytes_recv
+                bw_load = (end_bw - start_bw) / 1024 / 1024
+                logging.info("Bandwidth used to send image: " + str(bw_load) + " MB")
                 break
             f.write(data)
     f.close()
