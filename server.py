@@ -51,7 +51,7 @@ while run:
                 data = conn.recv(1028)
                 print(data)
 
-                if not data:
+                if not data or (data.find(b"\x45\x4F\x44") >= 0):
                     run = False
                     get_images = False
                     finished = True
@@ -62,7 +62,7 @@ while run:
                     bw_load = (end_bw - start_bw) / 1024
                     bw_usage = "Bandwidth usage for Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.4f}".format(bw_load) + " KB"
                     logging.info(bw_usage)
-                    image_results.append(bw_usage)
+                    image_results.append(bw_usage_byte)
                     break
                 
                 f.write(data)
@@ -94,7 +94,7 @@ while run:
         logging.info("Model successfully loaded")
         load_time = "Model loading time: " + "{0:.4f}".format(model_load) + " sec"
         logging.info(load_time)
-        image_results.append(load_time)
+        image_results.append(load_time.encode("utf-8"))
 
         modelLoaded = True
 
@@ -110,7 +110,7 @@ while run:
         model_run = run_end - run_start
         run_time = "Model running time: " + "{0:.4f}".format(model_run) + " sec"
         logging.info(run_time)
-        image_results.append(run_time)
+        image_results.append(run_time.encode("utf-8"))
 
         # Results
         results.print()  
@@ -126,5 +126,6 @@ while run:
         conn.send(b"\xFF\xFF")
         print("Loading next imageset...")
     else:
-        conn.send(pickle.dumps(image_results)) 
+        pkg = pickle.dumps(image_results)
+        conn.send(pkg) 
         print("Completed.")
