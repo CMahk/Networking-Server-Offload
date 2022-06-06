@@ -63,9 +63,12 @@ for image in filenames:
             print(reply)
             print("WHAAAAT")
 
-results = client.recv(1028)
-for s in pickle.loads(results):
-    print(s)
+with open("performance.log", "wb") as f:
+    metrics = client.recv(1028)
+    while (metrics):
+        f.write(metrics)
+        metrics = client.recv(1028)
+f.close()
 
 client.close()
 print("Completed.")

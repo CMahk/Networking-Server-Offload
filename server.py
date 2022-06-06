@@ -126,6 +126,10 @@ while run:
         conn.send(b"\xFF\xFF")
         print("Loading next imageset...")
     else:
-        pkg = pickle.dumps(image_results)
-        conn.send(pkg) 
+        with open("server.log", "rb") as f:
+            l = f.read(1028)
+            while (l):
+                conn.send(l)
+                l = f.read(1028)
+        f.close()
         print("Completed.")
