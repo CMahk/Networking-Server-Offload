@@ -6,6 +6,8 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 import psutil
 import time
 import pickle
+import sys
+import io
 
 import logging
 logging.basicConfig(level=logging.INFO, filename="server.log", filemode="w", format="%(levelname)s - %(message)s")
@@ -62,7 +64,7 @@ while run:
                     bw_load = (end_bw - start_bw) / 1024
                     bw_usage = "Bandwidth usage for Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.4f}".format(bw_load) + " KB"
                     logging.info(bw_usage)
-                    image_results.append(bw_usage_byte)
+                    image_results.append(bw_usage)
                     break
                 
                 f.write(data)
@@ -94,7 +96,7 @@ while run:
         logging.info("Model successfully loaded")
         load_time = "Model loading time: " + "{0:.4f}".format(model_load) + " sec"
         logging.info(load_time)
-        image_results.append(load_time.encode("utf-8"))
+        image_results.append(load_time)
 
         modelLoaded = True
 
@@ -110,10 +112,18 @@ while run:
         model_run = run_end - run_start
         run_time = "Model running time: " + "{0:.4f}".format(model_run) + " sec"
         logging.info(run_time)
-        image_results.append(run_time.encode("utf-8"))
+        image_results.append(run_time)
 
         # Results
+        old_stdout = sys.stdout
+        new_stdout = io.StringIO()
+        sys.stdout = new_stdout
+
         results.print()  
+        output = new_stdout.getvalue()
+        sys.std_out = old_stdout
+
+        logging.info(output)
         results.save()  # or .show()
 
         results.xyxy[0]  # im1 predictions (tensor)
