@@ -9,7 +9,7 @@ import pickle
 # Establish connection
 path = os.path.abspath(os.path.dirname(__file__))
 port = 25565
-host = "128.110.219.123"
+host = "128.110.219.124"
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((host, port))
@@ -63,9 +63,9 @@ for image in filenames:
             print(reply)
             print("WHAAAAT")
 
-results = client.recv(1028)
-for s in pickle.loads(results):
-    print(s)
+client.send("EOD".encode())
+
+client.recv(4096)
 
 client.close()
 print("Completed.")
