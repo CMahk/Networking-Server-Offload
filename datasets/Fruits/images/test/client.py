@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.INFO, filename="client.log", filemode="w", for
 
 path = os.path.abspath(os.path.dirname(__file__))
 port = 25565
-host = "128.110.217.57"
+host = "128.110.219.91"
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((host, port))
@@ -27,5 +27,4 @@ end = time.time()
 
 logging.info('Successfully sent the file')
 logging.info('Time to send image file: ' + str(end - start) + ' sec')
-client.close()
 logging.info('Connection closed')
