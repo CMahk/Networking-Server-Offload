@@ -56,13 +56,13 @@ while run:
                     finished = True
                     break
 
-                if data.find(b"\x45\x4F\x46") >= 1:
+                if data.find(b"\x45\x4F\x46") >= 0:
                     end_bw = psutil.net_io_counters().bytes_recv
                     bw_load = (end_bw - start_bw) / 1028 / 1028
-                    logging.info("Bandwidth used to send Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.2f}".format(bw_load) + " MB")
+                    logging.info("Bandwidth usage for Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.2f}".format(bw_load) + " MB")
                     image_results.append("{0:.2f}".format(bw_load))
                     break
-
+                
                 f.write(data)
         f.close()
 
