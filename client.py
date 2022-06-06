@@ -4,11 +4,12 @@ from os import walk
 import PIL
 from PIL import Image
 import time
+import pickle
 
 # Establish connection
 path = os.path.abspath(os.path.dirname(__file__))
 port = 25565
-host = "192.168.0.181"
+host = "128.110.219.123"
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((host, port))
@@ -61,6 +62,10 @@ for image in filenames:
         else:
             print(reply)
             print("WHAAAAT")
+
+results = client.recv(1028)
+for s in pickle.loads(results):
+    print(s)
 
 client.close()
 print("Completed.")

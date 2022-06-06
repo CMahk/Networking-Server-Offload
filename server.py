@@ -5,6 +5,7 @@ from PIL import Image, ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import psutil
 import time
+import pickle
 
 import logging
 logging.basicConfig(level=logging.INFO, filename="server.log", filemode="w", format="%(levelname)s - %(message)s")
@@ -59,8 +60,9 @@ while run:
                 if data.find(b"\x45\x4F\x46") >= 0:
                     end_bw = psutil.net_io_counters().bytes_recv
                     bw_load = (end_bw - start_bw) / 1024
-                    logging.info("Bandwidth usage for Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.2f}".format(bw_load) + " KB")
-                    image_results.append("{0:.2f}".format(bw_load))
+                    bw_usage = "Bandwidth usage for Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.4f}".format(bw_load) + " KB"
+                    logging.info(bw_usage)
+                    image_results.append(bw_usage)
                     break
                 
                 f.write(data)
@@ -90,8 +92,9 @@ while run:
 
         model_load = load_end - load_start
         logging.info("Model successfully loaded")
-        logging.info("Model loading time: " + "{0:.2f}".format(model_load) + " sec")
-        image_results.append("{0:.4f}".format(model_load))
+        load_time = "Model loading time: " + "{0:.4f}".format(model_load) + " sec"
+        logging.info(load_time)
+        image_results.append(load_time)
 
         modelLoaded = True
 
@@ -105,8 +108,9 @@ while run:
         run_end = time.time()
 
         model_run = run_end - run_start
-        logging.info("Model running time: " + "{0:.4f}".format(model_run) + " sec")
-        image_results.append("{0:.4f}".format(model_run))
+        run_time = "Model running time: " + "{0:.4f}".format(model_run) + " sec"
+        logging.info(run_time)
+        image_results.append(run_time)
 
         # Results
         results.print()  
@@ -122,4 +126,5 @@ while run:
         conn.send(b"\xFF\xFF")
         print("Loading next imageset...")
     else:
+        conn.send(pickle.dumps(image_results)) 
         print("Completed.")
