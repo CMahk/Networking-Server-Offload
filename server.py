@@ -6,6 +6,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 import psutil
 import time
 import pickle
+import math
 import sys
 import io
 
@@ -65,8 +66,8 @@ while run:
                     time_image_end = time.time()
                     bw_load = (end_bw - start_bw) / 1024
                     bw_usage = "Bandwidth usage for Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.4f}".format(bw_load) + " KB"
-                    time_image_total = time_image_end - time_image_start
-                    time_image_log = "Time taken for Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.4f}".format(time_image_total) + " sec"
+                    time_image_total = math.ceil((time_image_end - time_image_start) * 1000)
+                    time_image_log = "Time taken for Image " + str(count) + "_" + str(subcount) + ".jpg: " + str(time_image_total) + " ms"
                     logging.info(bw_usage)
                     logging.info(time_image_log)
                     image_results.append(bw_usage)
@@ -97,9 +98,9 @@ while run:
         model = torch.hub.load("ultralytics/yolov5", "custom", path = ptweight, force_reload = False)
         load_end = time.time()
 
-        model_load = load_end - load_start
+        model_load = math.ceil((load_end - load_start) * 1000)
         logging.info("Model successfully loaded")
-        load_time = "Model loading time: " + "{0:.4f}".format(model_load) + " sec"
+        load_time = "Model loading time: " + str(model_load) + " ms"
         logging.info(load_time)
         image_results.append(load_time)
 
@@ -114,8 +115,8 @@ while run:
         results = model(images)  # includes NMS
         run_end = time.time()
 
-        model_run = run_end - run_start
-        run_time = "Model running time: " + "{0:.4f}".format(model_run) + " sec"
+        model_run = math.ceil((run_end - run_start) * 1000)
+        run_time = "Model running time: " + str(model_run) + " ms"
         logging.info(run_time)
         image_results.append(run_time)
 
