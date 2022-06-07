@@ -4,6 +4,7 @@ import PIL
 from PIL import Image
 import time
 import torch
+import math
 import sys
 import io
 
@@ -30,7 +31,7 @@ time_start = time.time()
 model = torch.hub.load("ultralytics/yolov5", "custom", path = ptweight, force_reload = False)
 time_end = time.time()
 
-time_load = "{0:.4f}".format(time_end - time_start) + " sec"
+time_load = str(math.ceil((time_end - time_start) * 1000)) + " ms"
 logging.info("Model loading time: " + time_load)
 logging.info("Model successfully loaded")
 
@@ -59,8 +60,8 @@ for image in filenames:
     results = model(images)  # includes NMS
     run_end = time.time()
 
-    model_run = run_end - run_start
-    run_time = "Model running time: " + "{0:.4f}".format(model_run) + " sec"
+    model_run = math.ceil((run_end - run_start) * 1000)
+    run_time = "Model running time: " + str(model_run) + " ms"
     logging.info(run_time)
 
     # Model Results
