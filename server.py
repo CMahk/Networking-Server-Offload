@@ -45,12 +45,12 @@ while run:
     get_images = True
 
     while get_images:
-        time_image_start = time.time()
         with open(path + "/images/" + str(count) + "_" + str(subcount) + ".jpg", "wb") as f:
             print("Opening file " + str(count) + "_" + str(subcount) + ".jpg")
             start_bw = psutil.net_io_counters().bytes_recv
             print("Receiving data for image...")
 
+            time_image_start = time.time()
             while True:
                 data = conn.recv(1028)
                 print(data)
