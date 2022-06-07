@@ -42,6 +42,7 @@ while run:
 
     image_results = []
     get_images = True
+    time_image_start = time.time()
 
     while get_images:
         with open(path + "/images/" + str(count) + "_" + str(subcount) + ".jpg", "wb") as f:
@@ -61,9 +62,13 @@ while run:
 
                 if data.find(b"\x45\x4F\x46") >= 0:
                     end_bw = psutil.net_io_counters().bytes_recv
+                    time_image_end = time.time()
                     bw_load = (end_bw - start_bw) / 1024
                     bw_usage = "Bandwidth usage for Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.4f}".format(bw_load) + " KB"
+                    time_image_total = time_image_end - time_image_start
+                    time_image_log = "Time taken for Image " + str(count) + "_" + str(subcount) + ".jpg: " + "{0:.4f}".format(time_image_total) + " sec"
                     logging.info(bw_usage)
+                    logging.info(time_image_log)
                     image_results.append(bw_usage)
                     break
                 
