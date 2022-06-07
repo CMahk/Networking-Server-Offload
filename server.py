@@ -43,9 +43,9 @@ while run:
 
     image_results = []
     get_images = True
-    time_image_start = time.time()
 
     while get_images:
+        time_image_start = time.time()
         with open(path + "/images/" + str(count) + "_" + str(subcount) + ".jpg", "wb") as f:
             print("Opening file " + str(count) + "_" + str(subcount) + ".jpg")
             start_bw = psutil.net_io_counters().bytes_recv
